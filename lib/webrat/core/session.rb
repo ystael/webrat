@@ -110,7 +110,7 @@ For example:
       @default_headers.dup.merge(@custom_headers.dup)
     end
 
-    def request_page(url, http_method, data) #:nodoc:
+    def request_page(url, http_method, data, persistent_data = {}) #:nodoc:
       h = headers
       h['HTTP_REFERER'] = @current_url if @current_url
 
@@ -129,7 +129,7 @@ For example:
 
       if internal_redirect?
         check_for_infinite_redirects
-        request_page(response_location, :get, {})
+        request_page(response_location, :get, persistent_data, persistent_data)
       end
 
       return response
@@ -213,8 +213,8 @@ For example:
     #
     # Example:
     #   visit "/"
-    def visit(url = nil, http_method = :get, data = {})
-      request_page(url, http_method, data)
+    def visit(url = nil, http_method = :get, data = {}, persistent_data = {})
+      request_page(url, http_method, data.merge(persistent_data), persistent_data)
     end
 
     webrat_deprecate :visits, :visit
