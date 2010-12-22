@@ -285,8 +285,15 @@ For example:
       response_headers['Location']
     end
 
+    # fix redirects not working when config.mode = :rack (required for Rails 3)
+    # due to different default host between rack and rails
+    # See http://groups.google.com/group/webrat/browse_thread/thread/fb5ff3fccd97f3df
     def current_host
-      URI.parse(current_url).host || @custom_headers["Host"] || "www.example.com"
+      URI.parse(current_url).host || @custom_headers["Host"] || default_current_host
+    end
+
+    def default_current_host
+      adapter.class == Webrat::RackAdapter ? "example.org" : "www.example.com"
     end
 
     def response_location_host
