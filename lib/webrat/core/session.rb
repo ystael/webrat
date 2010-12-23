@@ -116,16 +116,17 @@ For example:
 
       debug_log "REQUESTING PAGE: #{http_method.to_s.upcase} #{url} with #{data.inspect} and HTTP headers #{h.inspect}"
 
-      process_request(http_method, url, data, h)
+      process_request(http_method, url, data.merge(persistent_data), h)
 
       save_and_open_page if exception_caught? && Webrat.configuration.open_error_files?
       raise PageLoadError.new("Page load was not successful (Code: #{response_code.inspect}):\n#{formatted_error}") unless success_code?
 
       reset
 
-      @current_url  = url
-      @http_method  = http_method
-      @data         = data
+      @current_url     = url
+      @http_method     = http_method
+      @data            = data.merge(persistent_data)
+      @persistent_data = persistent_data
 
       if internal_redirect?
         check_for_infinite_redirects
@@ -193,9 +194,9 @@ For example:
     #
     # Example:
     #   click_link_within "#user_12", "Vote"
-    def click_link_within(selector, link_text)
+    def click_link_within(selector, link_text, options = {})
       within(selector) do
-        click_link(link_text)
+        click_link(link_text, options)
       end
     end
 
@@ -214,7 +215,7 @@ For example:
     # Example:
     #   visit "/"
     def visit(url = nil, http_method = :get, data = {}, persistent_data = {})
-      request_page(url, http_method, data.merge(persistent_data), persistent_data)
+      request_page(url, http_method, data, persistent_data)
     end
 
     webrat_deprecate :visits, :visit

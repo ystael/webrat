@@ -14,12 +14,13 @@ module Webrat
       method = options[:method] || http_method
       return if href =~ /^#/ && method == :get
 
+      persistent_data = options[:persistent_data] || {}
       options[:javascript] = true if options[:javascript].nil?
 
       if options[:javascript]
-        @session.request_page(absolute_href, method, data)
+        @session.request_page(absolute_href, method, data, persistent_data)
       else
-        @session.request_page(absolute_href, :get, {})
+        @session.request_page(absolute_href, :get, {}, persistent_data)
       end
     end
 
