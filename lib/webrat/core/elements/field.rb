@@ -187,10 +187,10 @@ module Webrat
       nil
     end
 
-    def click
+    def click(options = {})
       raise_error_if_disabled
       set(@element["value"]) unless @element["name"].blank?
-      form.submit
+      form.submit(options)
     end
 
   end

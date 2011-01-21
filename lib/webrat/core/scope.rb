@@ -287,8 +287,8 @@ module Webrat
     #
     # The URL and HTTP method for the form submission are automatically read from the
     # <tt>action</tt> and <tt>method</tt> attributes of the <tt><form></tt> element.
-    def click_button(value = nil)
-      find_button(value).click
+    def click_button(value = nil, options = {})
+      find_button(value).click(options)
     end
 
     webrat_deprecate :clicks_button, :click_button

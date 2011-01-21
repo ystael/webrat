@@ -16,8 +16,10 @@ module Webrat
       @fields ||= Field.load_all(@session, @element)
     end
 
-    def submit
-      @session.request_page(form_action, form_method, params)
+    def submit(options = {})
+      persistent_data = options[:persistent_data] || {}
+
+      @session.request_page(form_action, form_method, params, persistent_data)
     end
 
     def field_named(name, *field_types)
